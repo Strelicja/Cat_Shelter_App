@@ -38,7 +38,6 @@ class App extends React.Component {
     </div>)
   }}
 
-//tylko wyświetla
 class SearchBar extends React.Component {
 
   handleSearch = (event) => {
@@ -64,9 +63,8 @@ class SearchBar extends React.Component {
       </p>
     </form>;
   }
-
 }
-//
+
 class CatTable extends React.Component {
   render() {
     var rows = [];
@@ -106,7 +104,6 @@ class CatCategoryRow extends React.Component {
   render() {
     return <tr>
       <th className="turquoise" colSpan="2">{this.props.category}</th>
-
       </tr>;
   }
 }

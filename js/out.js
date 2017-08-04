@@ -10348,9 +10348,6 @@ var App = function (_React$Component) {
   return App;
 }(_react2.default.Component);
 
-//tylko wyświetla
-
-
 var SearchBar = function (_React$Component2) {
   _inherits(SearchBar, _React$Component2);
 
@@ -10399,8 +10396,6 @@ var SearchBar = function (_React$Component2) {
 
   return SearchBar;
 }(_react2.default.Component);
-//
-
 
 var CatTable = function (_React$Component3) {
   _inherits(CatTable, _React$Component3);
