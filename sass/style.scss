@@ -1,0 +1,25 @@
+// Colors
+$rainbow: (
+red: #FF0000,
+yellow: #FFFF00,
+green: #00FF00,
+blue: #0000FF,
+turquoise:#40e0d0
+);
+.blueWidth {
+  width: 257px;
+}
+.blue {
+  width: 250px;
+}
+.borderWidth {
+  width: 132px;
+}
+body {
+  font-family: fantasy;
+}
+@each $name, $color in $rainbow {
+  .#{$name}{
+    border: 2px solid $color;
+  }
+}
