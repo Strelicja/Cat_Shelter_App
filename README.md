@@ -345,3 +345,4 @@ gulp scss
 * Teraz wycentruj aplikację i dodaj ostylowanie tak aby aplikacja wyglądała estetycznie
 (lub lepiej niż przed ostylowaniem;)
 # Cat_Shelter_App
+# Cat_Shelter_App
