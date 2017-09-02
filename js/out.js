@@ -10304,17 +10304,15 @@ var App = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-    _this.search = function (event) {
-      console.log(event);
+    _this.changeBox = function () {
       _this.setState({
-        filterText: event
+        likesKids: _this.state.likesKids ? false : true
       });
     };
 
-    _this.checked = function (event) {
-      console.log(event);
+    _this.changeFilterText = function (text) {
       _this.setState({
-        likesKids: event
+        filterText: text
       });
     };
 
@@ -10331,16 +10329,11 @@ var App = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { className: 'yellow blueWidth' },
-        _react2.default.createElement(SearchBar, {
-          likesKids: this.state.likesKids,
-          search: this.search,
-          checked: this.checked,
-          filterText: this.state.filterText }),
-        _react2.default.createElement(CatTable, {
-          likesKids: this.state.likesKids,
-
-          filterText: this.state.filterText,
-          kitties: this.props.kitties })
+        _react2.default.createElement(Title, null),
+        _react2.default.createElement(SearchBar, { filter: this.state.filterText, likesKids: this.state.likesKids,
+          changeBox: this.changeBox, filterText: this.changeFilterText }),
+        _react2.default.createElement(CatTable, { kitties: this.props.kitties, filter: this.state.filterText,
+          likesKids: this.state.likesKids })
       );
     }
   }]);
@@ -10362,32 +10355,29 @@ var SearchBar = function (_React$Component2) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this2 = _possibleConstructorReturn(this, (_ref = SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call.apply(_ref, [this].concat(args))), _this2), _this2.handleSearch = function (event) {
-      _this2.props.search(event.target.value);
-    }, _this2.handleChecked = function (event) {
-      _this2.props.checked(event.target.value);
+    return _ret = (_temp = (_this2 = _possibleConstructorReturn(this, (_ref = SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call.apply(_ref, [this].concat(args))), _this2), _this2.handlerCheckBox = function () {
+      // rozwiązanie problemu event.target.checked
+      if (typeof _this2.props.changeBox === 'function') {
+        _this2.props.changeBox();
+      }
+    }, _this2.handlerSearch = function (event) {
+      if (typeof _this2.props.filterText === 'function') {
+        _this2.props.filterText(event.target.value);
+      }
     }, _temp), _possibleConstructorReturn(_this2, _ret);
   }
 
   _createClass(SearchBar, [{
     key: 'render',
     value: function render() {
-
       return _react2.default.createElement(
         'form',
         { className: 'blue' },
-        _react2.default.createElement('input', {
-          type: 'text',
-          value: this.props.filterText,
-          onChange: this.handleSearch,
-          placeholder: 'Search...' }),
+        _react2.default.createElement('input', { type: 'text', placeholder: 'Search...', onChange: this.handlerSearch }),
         _react2.default.createElement(
           'p',
           null,
-          _react2.default.createElement('input', {
-            value: this.props.filterText,
-            onChange: this.handleChecked,
-            type: 'checkbox' }),
+          _react2.default.createElement('input', { type: 'checkbox', checked: this.props.likesKids, onChange: this.handlerCheckBox }),
           'Only show kitties that likes kids'
         )
       );
@@ -10411,21 +10401,18 @@ var CatTable = function (_React$Component3) {
     value: function render() {
       var rows = [];
       var lastCategory = null;
-      var filterText = this.props.filterText;
-      var checkbox = this.props.likesKids;
+      var filters = this.props.filter;
+      var checkBox = this.props.likesKids;
 
       this.props.kitties.forEach(function (kitty) {
         if (kitty.category !== lastCategory) {
-          rows.push(_react2.default.createElement(CatCategoryRow, {
-            category: kitty.category,
-            key: kitty.category }));
+          rows.push(_react2.default.createElement(CatCategoryRow, { category: kitty.category, key: kitty.category }));
         }
 
-        if ((kitty.name.includes(filterText) && filterText.length > 2 || filterText.length < 3) && (kitty.likesKids === true || checkbox === false)) {
-          rows.push(_react2.default.createElement(CatRow, {
-            kitty: kitty,
-            key: kitty.name }));
+        if ((kitty.name.includes(filters) && filters.length > 2 || filters.length < 3) && (kitty.likesKids === true || checkBox === false)) {
+          rows.push(_react2.default.createElement(CatRow, { kitty: kitty, key: kitty.name }));
         }
+
         lastCategory = kitty.category;
       });
 
@@ -10441,12 +10428,12 @@ var CatTable = function (_React$Component3) {
             _react2.default.createElement(
               'th',
               null,
-              'Name'
+              ' Cat name  '
             ),
             _react2.default.createElement(
               'th',
               null,
-              'Age'
+              ' Cat age '
             )
           )
         ),
@@ -10476,11 +10463,13 @@ var CatCategoryRow = function (_React$Component4) {
     value: function render() {
       return _react2.default.createElement(
         'tr',
-        null,
+        { className: 'turquoise' },
         _react2.default.createElement(
           'th',
-          { className: 'turquoise', colSpan: '2' },
-          this.props.category
+          { colSpan: '2' },
+          ' ',
+          this.props.category,
+          ' '
         )
       );
     }
@@ -10504,36 +10493,21 @@ var CatRow = function (_React$Component5) {
       var name = this.props.kitty.likesKids ? this.props.kitty.name : _react2.default.createElement(
         'span',
         { style: { color: 'red' } },
-        ' ',
         this.props.kitty.name,
         ' '
       );
-
-      var age = this.props.kitty.likesKids ? this.props.kitty.age : _react2.default.createElement(
-        'span',
-        { style: { color: 'black' } },
-        ' ',
-        this.props.kitty.age,
-        ' '
-      );
-
       return _react2.default.createElement(
         'tr',
-        null,
+        { className: 'red' },
         _react2.default.createElement(
           'td',
-          { className: 'red' },
+          null,
           name
         ),
         _react2.default.createElement(
           'td',
           { className: 'red borderWidth' },
-          age
-        ),
-        _react2.default.createElement(
-          'td',
-          null,
-          this.props.kitty.cena
+          this.props.kitty.age
         )
       );
     }
@@ -10542,7 +10516,31 @@ var CatRow = function (_React$Component5) {
   return CatRow;
 }(_react2.default.Component);
 
+var Title = function (_React$Component6) {
+  _inherits(Title, _React$Component6);
+
+  function Title() {
+    _classCallCheck(this, Title);
+
+    return _possibleConstructorReturn(this, (Title.__proto__ || Object.getPrototypeOf(Title)).apply(this, arguments));
+  }
+
+  _createClass(Title, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'h1',
+        null,
+        'Choose your cat!'
+      );
+    }
+  }]);
+
+  return Title;
+}(_react2.default.Component);
+
 var kitties = [{ category: "male", age: "4", likesKids: true, name: "Fidel Catstro" }, { category: "male", age: "9", likesKids: true, name: "Hairy Potter" }, { category: "male", age: "2", likesKids: false, name: "Grumpy" }, { category: "female", age: "1", likesKids: true, name: "Jude Paw" }, { category: "female", age: "2", likesKids: false, name: "Lucifurr" }, { category: "female", age: "3", likesKids: true, name: "Meowly Cyrus" }];
+
 _reactDom2.default.render(_react2.default.createElement(App, { kitties: kitties }), document.getElementById('app'));
 
 /***/ }),
